@@ -27,15 +27,15 @@ body {
     line-height: 1.6;
 }
 
-/* Fixed container rules to handle ultra-wide screen scaling beautifully */
+/* Keeps presentation clean on ultra-wide or full scale desktop monitors */
 .container {
-    max-width: 1600px;     /* Increased from 1200px to fill large monitors beautifully */
-    width: 100%;
-    padding: 0 30px;       /* Side spacing for clean presentation */
+    max-width: 1600px;
     margin: 0 auto;
+    padding: 0 30px;
+    width: 100%;
 }
 
-/* --- Navigation --- */
+/* --- Navigation Layout --- */
 header {
     background: var(--white);
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -76,6 +76,15 @@ header {
 
 .nav-links a:hover, .nav-links a.active {
     color: var(--primary-color);
+}
+
+.menu-toggle {
+    display: none; /* Hidden by default on desktop computers */
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-dark);
+    cursor: pointer;
 }
 
 /* --- Hero Section --- */
@@ -161,7 +170,7 @@ header {
     gap: 15px;
 }
 
-/* --- Quick Cards --- */
+/* --- Quick Navigation Cards --- */
 .quick-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -289,7 +298,7 @@ header {
     background-position: center;
 }
 
-/* --- Destinations Section --- */
+/* --- Destinations Layout Section --- */
 .destinations {
     margin-bottom: 60px;
 }
@@ -307,7 +316,7 @@ header {
     color: var(--text-muted);
 }
 
-/* FIXED: Changed to an explicit 6 column grid matrix row */
+/* Forces all 6 elements onto a single flat horizontal row matrix */
 .destinations-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -380,7 +389,7 @@ header {
     font-size: 14px;
 }
 
-/* --- Footer --- */
+/* --- Footer Area --- */
 footer {
     background: #0b2216;
     color: #a3b8cc;
@@ -473,21 +482,74 @@ footer ul li a:hover {
     text-decoration: none;
 }
 
-/* --- Responsive Media Queries --- */
+/* --- MEDIA QUERIES (FIXED MOBILE SHARDS) --- */
 @media (max-width: 1024px) {
-    .quick-cards { grid-template-columns: repeat(2, 1fr); margin-top: -20px; }
-    .destinations-grid { grid-template-columns: repeat(3, 1fr); }
+    .quick-cards { 
+        grid-template-columns: repeat(2, 1fr); 
+        margin-top: -20px; 
+    }
+    .destinations-grid { 
+        grid-template-columns: repeat(3, 1fr); 
+    }
 }
 
 @media (max-width: 768px) {
-    .about { grid-template-columns: 1fr; }
-    .footer-container { grid-template-columns: 1fr; }
-    .feedback-banner { flex-direction: column; gap: 20px; text-align: center; }
-    .feedback-content { flex-direction: column; }
-    .destinations-grid { grid-template-columns: repeat(2, 1fr); }
+    .navbar {
+        position: relative;
+    }
+
+    /* Enables visual interface toggle trigger */
+    .menu-toggle {
+        display: block !important;
+    }
+
+    /* Reconfigures navigation panel links context into drop list modal layout stack */
+    .nav-links {
+        display: none; 
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: var(--white);
+        padding: 20px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        gap: 15px;
+        z-index: 2000;
+    }
+
+    /* JavaScript Toggle class indicator utility trigger rule */
+    .nav-links.active {
+        display: flex !important;
+    }
+
+    .about { 
+        grid-template-columns: 1fr; 
+    }
+    .footer-container { 
+        grid-template-columns: 1fr; 
+    }
+    .feedback-banner { 
+        flex-direction: column; 
+        gap: 20px; 
+        text-align: center; 
+    }
+    .feedback-content { 
+        flex-direction: column; 
+    }
+    .destinations-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
 }
 
 @media (max-width: 480px) {
-    .quick-cards { grid-template-columns: 1fr; }
-    .destinations-grid { grid-template-columns: 1fr; }
+    .quick-cards { 
+        grid-template-columns: 1fr; 
+    }
+    .destinations-grid { 
+        grid-template-columns: repeat(1, 1fr); 
+    }
+    .hero-content h1 {
+        font-size: 32px;
+    }
 }

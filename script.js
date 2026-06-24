@@ -1,26 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // --- SAFE LAYOUT INJECTION ENGINE ---
+    // --- ASYNC LAYOUT COMPONENT INJECTOR ENGINE ---
     function loadLayoutComponent(placeholderId, fileUrl, successCallback) {
         const placeholder = document.getElementById(placeholderId);
         if (placeholder) {
             fetch(fileUrl)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error(`Could not locate layout template: ${response.status}`);
+                        throw new Error(`Failed network request reading element component: ${response.status}`);
                     }
                     return response.text();
                 })
                 .then(htmlContent => {
-                    // FIXED: Using innerHTML preserves structural placeholder integrity across live servers
                     placeholder.innerHTML = htmlContent;
                     if (successCallback) successCallback();
                 })
-                .catch(err => console.error(`Layout Load Exception [${fileUrl}]:`, err));
+                .catch(err => console.error(`Failed parsing structural asset template [${fileUrl}]:`, err));
         }
     }
 
-    // Initialize layout templates cleanly
+    // Dynamic Engine Thread Boots
     loadLayoutComponent("navigation-placeholder", "navigation.html", () => {
         initializeMobileMenu();
         initializeStickyHeader();
@@ -29,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadLayoutComponent("footer-placeholder", "footer.html");
 
 
-    // --- FUNCTIONAL SITE INITIALIZERS ---
+    // --- RENDERING ROUTINE HANDLERS ---
 
     function initializeStickyHeader() {
         const header = document.querySelector('header');
@@ -47,25 +46,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initializeMobileMenu() {
         const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.querySelector('.nav-links');
+        const navLinks = document.querySelector('.nav-links');
 
-        if (menuToggle && navMenu) {
+        if (menuToggle && navLinks) {
+            // Interactive hamburger tap toggle event action
             menuToggle.addEventListener('click', (e) => {
                 e.stopPropagation();
-                navMenu.classList.toggle('active');
+                navLinks.classList.toggle('active');
                 
                 const icon = menuToggle.querySelector('i');
-                if (navMenu.classList.contains('active')) {
+                if (navLinks.classList.contains('active')) {
                     icon.classList.replace('fa-bars', 'fa-times');
                 } else {
                     icon.classList.replace('fa-times', 'fa-bars');
                 }
             });
 
+            // Clean click dismiss backup fallback structure hook
             document.addEventListener('click', (e) => {
-                if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-                    if (navMenu.classList.contains('active')) {
-                        navMenu.classList.remove('active');
+                if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                    if (navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
                         menuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
                     }
                 }
@@ -73,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Interactive Destination Click Handler
+    // Travel Destination Action Prompts
     const destCards = document.querySelectorAll('.dest-card');
     destCards.forEach(card => {
         card.addEventListener('click', () => {
@@ -82,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Feedback Survey Modal Trigger
+    // Feedback Management Banner Prompts
     const feedbackBtn = document.getElementById('feedbackBtn');
     if (feedbackBtn) {
         feedbackBtn.addEventListener('click', () => {
