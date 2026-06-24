@@ -93,7 +93,9 @@ header {
 
 /* --- Hero Section --- */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.45)), url('./Images/home_page_main.jpg') center 35%/cover no-repeat;
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('./Images/home_page_main.jpg');
+    background-size: cover;
+    background-position: center 35%;
     height: 550px;
     display: flex;
     align-items: center;
@@ -175,7 +177,7 @@ header {
 /* --- Quick Cards --- */
 .quick-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin-top: -50px;
     position: relative;
@@ -249,10 +251,6 @@ header {
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    justify-content: center;
 }
 .link-green { color: var(--accent-green); }
 .link-blue { color: var(--accent-blue); }
@@ -324,7 +322,7 @@ header {
 
 .destinations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
 }
@@ -359,59 +357,6 @@ header {
 .center-btn {
     display: flex;
     justify-content: center;
-}
-
-/* --- Essential Travel Tips --- */
-.travel-tips {
-    margin-bottom: 60px;
-}
-
-.tips-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-}
-
-.tip-card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 25px;
-    display: flex;
-    gap: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-}
-
-.tip-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-.tip-text h3 {
-    font-size: 18px;
-    margin-bottom: 6px;
-    color: var(--text-dark);
-}
-
-.tip-text p {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 15px;
-    line-height: 1.5;
-}
-
-.tip-link {
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
 }
 
 /* --- Feedback Banner --- */
@@ -539,17 +484,17 @@ footer ul li a:hover {
     text-decoration: none;
 }
 
-/* --- Optimized Responsive Architecture --- */
+/* Responsive fixes */
 @media (max-width: 992px) {
-    .navbar { position: relative; }
+    .navbar { position: relative; padding: 0 20px; }
     .menu-toggle { display: block; }
     .nav-links {
         display: none;
         flex-direction: column;
         position: absolute;
         top: 70px;
-        left: -20px;
-        width: calc(100% + 40px);
+        left: 0;
+        width: 100%;
         background: var(--white);
         padding: 20px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -557,19 +502,11 @@ footer ul li a:hover {
         z-index: 1000;
     }
     .nav-links.active { display: flex; }
-    .about { grid-template-columns: 1fr; }
-    .footer-container { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
+    .about { grid-template-columns: 1fr; }
+    .footer-container { grid-template-columns: 1fr; }
     .feedback-banner { flex-direction: column; gap: 20px; text-align: center; }
     .feedback-content { flex-direction: column; }
-}
-
-@media (max-width: 576px) {
-    .footer-container { grid-template-columns: 1fr; }
-    .hero-buttons { flex-direction: column; width: 100%; }
-    .hero-buttons .btn { width: 100%; justify-content: center; }
-    .tip-card { flex-direction: column; gap: 15px; }
-    .footer-bottom { flex-direction: column; align-items: center; gap: 10px; }
 }

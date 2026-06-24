@@ -1,28 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     // --- LAYOUT INJECTION ENGINE ---
-    // Safely reads static HTML component code and renders it inside assigned placeholders
     function loadLayoutComponent(placeholderId, fileUrl, successCallback) {
         const placeholder = document.getElementById(placeholderId);
         if (placeholder) {
             fetch(fileUrl)
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP network fault reading layout asset file: ${response.status}`);
-                    }
+                    if (!response.ok) throw new Error(`Could not find ${fileUrl}`);
                     return response.text();
                 })
                 .then(htmlContent => {
-                    placeholder.outerHTML = htmlContent;
+                    placeholder.innerHTML = htmlContent;
                     if (successCallback) successCallback();
                 })
-                .catch(err => console.error(`Failed loading structural template [${fileUrl}]:`, err));
+                .catch(err => console.error(`Layout Error:`, err));
         }
     }
 
-    // Initialize layout templates dynamically on boot
+    // Initialize layout components safely
     loadLayoutComponent("navigation-placeholder", "navigation.html", () => {
-        // Wire up navigation event listeners immediately after layout html mounts
         initializeMobileMenu();
         initializeStickyHeader();
     });
@@ -70,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 4. Mobile Navigation Dropdown Controller (Modular Fix)
     function initializeMobileMenu() {
         const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.querySelector('.nav-links');
+        const navMenu = document.getElementById('navMenu');
 
         if (menuToggle && navMenu) {
             menuToggle.addEventListener('click', (e) => {
@@ -86,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // Close the mobile menu automatically if clicking anywhere outside the opened header menu container
+            // Close mobile menu when clicking outside
             document.addEventListener('click', (e) => {
                 if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
                     if (navMenu.classList.contains('active')) {
