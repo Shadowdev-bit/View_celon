@@ -25,17 +25,15 @@ body {
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
-    overflow-x: hidden;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-    width: 100%;
 }
 
-/* --- Navigation --- */
+/* --- Navigation Header Rules --- */
 header {
     background: var(--white);
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -57,11 +55,7 @@ header {
     color: var(--text-dark);
 }
 
-.logo i {
-    color: var(--primary-color);
-}
-
-.logo span {
+.logo i, .logo span {
     color: var(--primary-color);
 }
 
@@ -82,6 +76,7 @@ header {
     color: var(--primary-color);
 }
 
+/* Hide mobile hamburger toggle element on standard screens */
 .menu-toggle {
     display: none;
     background: none;
@@ -484,12 +479,18 @@ footer ul li a:hover {
     text-decoration: none;
 }
 
-/* Responsive fixes */
+/* --- Responsive Layout Configurations --- */
 @media (max-width: 992px) {
-    .navbar { position: relative; padding: 0 20px; }
-    .menu-toggle { display: block; }
+    .navbar {
+        position: relative;
+    }
+    
+    .menu-toggle {
+        display: block; /* Reveals three lines menu trigger button on smaller viewports */
+    }
+
     .nav-links {
-        display: none;
+        display: none; /* Hide default navigation row block */
         flex-direction: column;
         position: absolute;
         top: 70px;
@@ -497,11 +498,15 @@ footer ul li a:hover {
         width: 100%;
         background: var(--white);
         padding: 20px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         gap: 15px;
-        z-index: 1000;
+        z-index: 2000;
     }
-    .nav-links.active { display: flex; }
+
+    /* Activated dynamic status toggled by javascript action click */
+    .nav-links.active {
+        display: flex;
+    }
 }
 
 @media (max-width: 768px) {

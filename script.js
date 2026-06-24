@@ -1,29 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // --- LAYOUT INJECTION ENGINE ---
-    function loadLayoutComponent(placeholderId, fileUrl, successCallback) {
+    // --- OFFLINE-SAFE SECURE LAYOUT INJECTOR ---
+    function localComponentInject(placeholderId, fileUrl, successCallback) {
         const placeholder = document.getElementById(placeholderId);
-        if (placeholder) {
-            fetch(fileUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error(`Could not find ${fileUrl}`);
-                    return response.text();
-                })
-                .then(htmlContent => {
-                    placeholder.innerHTML = htmlContent;
-                    if (successCallback) successCallback();
-                })
-                .catch(err => console.error(`Layout Error:`, err));
-        }
+        if (!placeholder) return;
+
+        // Uses a hidden iframe to read local files without triggering browser security blocks
+        const frame = document.createElement('iframe');
+        frame.style.display = 'none';
+        frame.src = fileUrl;
+        
+        frame.onload = function() {
+            try {
+                const embeddedHtml = frame.contentDocument.body.innerHTML;
+                placeholder.innerHTML = embeddedHtml;
+                if (successCallback) successCallback();
+            } catch (e) {
+                console.error(`Local layout engine fallback error on: ${fileUrl}`, e);
+            }
+            document.body.removeChild(frame);
+        };
+        
+        document.body.appendChild(frame);
     }
 
-    // Initialize layout components safely
-    loadLayoutComponent("navigation-placeholder", "navigation.html", () => {
+    // Inject your separated layout files safely
+    localComponentInject("navigation-placeholder", "navigation.html", () => {
         initializeMobileMenu();
         initializeStickyHeader();
     });
     
-    loadLayoutComponent("footer-placeholder", "footer.html");
+    localComponentInject("footer-placeholder", "footer.html");
 
 
     // --- CORE SITE INITIALIZATION HANDLERS ---
@@ -63,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 4. Mobile Navigation Dropdown Controller (Modular Fix)
+    // 4. Mobile Navigation Dropdown Controller
     function initializeMobileMenu() {
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
@@ -73,7 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.stopPropagation();
                 navMenu.classList.toggle('active');
                 
-                // Toggle between hamburger icon and 'X' close icon safely
                 const icon = menuToggle.querySelector('i');
                 if (navMenu.classList.contains('active')) {
                     icon.classList.replace('fa-bars', 'fa-times');
@@ -82,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // Close mobile menu when clicking outside
             document.addEventListener('click', (e) => {
                 if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
                     if (navMenu.classList.contains('active')) {
