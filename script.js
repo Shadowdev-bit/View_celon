@@ -1,61 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // --- OFFLINE-SAFE SECURE LAYOUT INJECTOR ---
-    function localComponentInject(placeholderId, fileUrl, successCallback) {
+    // --- LAYOUT INJECTION ENGINE ---
+    function loadLayoutComponent(placeholderId, fileUrl, successCallback) {
         const placeholder = document.getElementById(placeholderId);
-        if (!placeholder) return;
-
-        // Uses a hidden iframe to read local files without triggering browser security blocks
-        const frame = document.createElement('iframe');
-        frame.style.display = 'none';
-        frame.src = fileUrl;
-        
-        frame.onload = function() {
-            try {
-                const embeddedHtml = frame.contentDocument.body.innerHTML;
-                placeholder.innerHTML = embeddedHtml;
-                if (successCallback) successCallback();
-            } catch (e) {
-                console.error(`Local layout engine fallback error on: ${fileUrl}`, e);
-            }
-            document.body.removeChild(frame);
-        };
-        
-        document.body.appendChild(frame);
+        if (placeholder) {
+            fetch(fileUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP network fault reading layout asset file: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(htmlContent => {
+                    placeholder.innerHTML = htmlContent;
+                    if (successCallback) successCallback();
+                })
+                .catch(err => console.error(`Failed loading structural template [${fileUrl}]:`, err));
+        }
     }
 
-    // Inject your separated layout files safely
-    localComponentInject("navigation-placeholder", "navigation.html", () => {
+    // Initialize components dynamically
+    loadLayoutComponent("navigation-placeholder", "navigation.html", () => {
         initializeMobileMenu();
         initializeStickyHeader();
     });
     
-    localComponentInject("footer-placeholder", "footer.html");
+    loadLayoutComponent("footer-placeholder", "footer.html");
 
 
-    // --- CORE SITE INITIALIZATION HANDLERS ---
+    // --- SITE HANDLERS ---
 
-    // 1. Interactive Destination Cards
-    const destCards = document.querySelectorAll('.dest-card');
-    destCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const destinationName = card.querySelector('h4').innerText;
-            alert(`Redirecting you to our custom travel guide for ${destinationName}!`);
-        });
-    });
-
-    // 2. Feedback Action Button
-    const feedbackBtn = document.getElementById('feedbackBtn');
-    if (feedbackBtn) {
-        feedbackBtn.addEventListener('click', () => {
-            const userEmail = prompt("Please enter your email to receive our feedback form:");
-            if (userEmail) {
-                alert(`Thank you! We have sent a survey link to ${userEmail}.`);
-            }
-        });
-    }
-
-    // 3. Dynamic Sticky Header Shadow Loader
     function initializeStickyHeader() {
         const header = document.querySelector('header');
         if (header) {
@@ -70,10 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 4. Mobile Navigation Dropdown Controller
     function initializeMobileMenu() {
         const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.getElementById('navMenu');
+        const navMenu = document.querySelector('.nav-links');
 
         if (menuToggle && navMenu) {
             menuToggle.addEventListener('click', (e) => {
@@ -97,5 +70,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         }
+    }
+
+    // Interactive Destination Click Actions
+    const destCards = document.querySelectorAll('.dest-card');
+    destCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const destinationName = card.querySelector('h4').innerText;
+            alert(`Redirecting you to our custom travel guide for ${destinationName}!`);
+        });
+    });
+
+    // Feedback Prompt Action Button
+    const feedbackBtn = document.getElementById('feedbackBtn');
+    if (feedbackBtn) {
+        feedbackBtn.addEventListener('click', () => {
+            const userEmail = prompt("Please enter your email to receive our feedback form:");
+            if (userEmail) {
+                alert(`Thank you! We have sent a survey link to ${userEmail}.`);
+            }
+        });
     }
 });
