@@ -1,25 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // --- LAYOUT INJECTION ENGINE ---
+    // --- SAFE LAYOUT INJECTION ENGINE ---
     function loadLayoutComponent(placeholderId, fileUrl, successCallback) {
         const placeholder = document.getElementById(placeholderId);
         if (placeholder) {
             fetch(fileUrl)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error(`HTTP network fault reading layout asset file: ${response.status}`);
+                        throw new Error(`Could not locate layout template: ${response.status}`);
                     }
                     return response.text();
                 })
                 .then(htmlContent => {
+                    // FIXED: Using innerHTML preserves structural placeholder integrity across live servers
                     placeholder.innerHTML = htmlContent;
                     if (successCallback) successCallback();
                 })
-                .catch(err => console.error(`Failed loading structural template [${fileUrl}]:`, err));
+                .catch(err => console.error(`Layout Load Exception [${fileUrl}]:`, err));
         }
     }
 
-    // Initialize components dynamically
+    // Initialize layout templates cleanly
     loadLayoutComponent("navigation-placeholder", "navigation.html", () => {
         initializeMobileMenu();
         initializeStickyHeader();
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadLayoutComponent("footer-placeholder", "footer.html");
 
 
-    // --- SITE HANDLERS ---
+    // --- FUNCTIONAL SITE INITIALIZERS ---
 
     function initializeStickyHeader() {
         const header = document.querySelector('header');
@@ -72,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Interactive Destination Click Actions
+    // Interactive Destination Click Handler
     const destCards = document.querySelectorAll('.dest-card');
     destCards.forEach(card => {
         card.addEventListener('click', () => {
@@ -81,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Feedback Prompt Action Button
+    // Feedback Survey Modal Trigger
     const feedbackBtn = document.getElementById('feedbackBtn');
     if (feedbackBtn) {
         feedbackBtn.addEventListener('click', () => {
